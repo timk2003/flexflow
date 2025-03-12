@@ -19,7 +19,6 @@ import 'package:gym_companion/utils/theme.dart';
 // Auth Provider
 class AuthProvider with ChangeNotifier {
   User? _user;
-
   User? get user => _user;
 
   void setUser(User? user) {
