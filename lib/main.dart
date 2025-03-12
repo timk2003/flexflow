@@ -109,15 +109,13 @@ class MainScreen extends StatelessWidget {
     );
   }
 }
-
-// Bottom Navigation Bar
 class BottomNavBar extends StatelessWidget {
   final List<IconData> iconList = [
-    EneftyIcons.home_2_outline,
+    EneftyIcons.home_outline,
     EneftyIcons.activity_outline,
     EneftyIcons.archive_book_outline,
     EneftyIcons.chart_2_outline,
-    EneftyIcons.profile_outline,
+    EneftyIcons.user_outline,
   ];
 
   @override
@@ -127,16 +125,22 @@ class BottomNavBar extends StatelessWidget {
 
     return AnimatedBottomNavigationBar(
       icons: iconList,
-      backgroundColor: Colors.black, // Schwarzer Hintergrund
       activeIndex: screens.indexOf(navigationProvider.currentScreen),
-      inactiveColor: Colors.white,
+      backgroundColor: Colors.black, // Schwarzer Hintergrund
       activeColor: Colors.redAccent,
-      notchSmoothness: NotchSmoothness.verySmoothEdge, // Smooth Animation
+      height: 80, // Höhe des Navigationsbereichs,
+      inactiveColor: Colors.white,
+      iconSize: 26, // Etwas größere Icons für besseren Look
       gapLocation: GapLocation.none, // Kein Floating Button
+      notchSmoothness: NotchSmoothness.smoothEdge, // Weiche Übergänge
+      leftCornerRadius: 20,
+      rightCornerRadius: 20,
+      splashSpeedInMilliseconds: 300, // Schnelle Animation
+      splashColor: Colors.redAccent.withOpacity(0.3), // Glow-Effekt
       onTap: (index) {
         navigationProvider.changeScreen(screens[index]);
       },
-      iconSize: 24, // Größere Icons für besseren Look
+      scaleFactor: 1.1, // Aktives Icon wird leicht größer
     );
   }
 }
