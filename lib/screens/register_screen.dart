@@ -1,5 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:gym_companion/main.dart';
+import 'package:gym_companion/providers/auth_provider.dart'; // Stelle sicher, dass der Pfad korrekt ist
 
 class RegisterScreen extends StatefulWidget {
   @override
@@ -13,6 +16,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _confirmPasswordController = TextEditingController();
   bool _passwordVisible = false;
   bool _confirmPasswordVisible = false;
+  final AuthService _authService = AuthService();
 
   @override
   Widget build(BuildContext context) {
@@ -116,9 +120,36 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                     SizedBox(height: 24),
                     ElevatedButton(
-                      onPressed: () {
+                      onPressed: () async {
                         if (_formKey.currentState!.validate()) {
-                          // Hier kannst du die Logik für die Registrierung hinzufügen
+                          // Passwortübereinstimmung überprüfen
+                          if (_passwordController.text !=
+                              _confirmPasswordController.text) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                  content: Text('Passwörter stimmen nicht überein.'),
+                                  backgroundColor: Colors.red),
+                            );
+                            return; // Verhindere die Registrierung, wenn Passwörter nicht übereinstimmen
+                          }
+
+                          // Anmelde-Logik mit AuthService
+                          User? user = await _authService.registerWithEmail(
+                            context,
+                            _emailController.text, // Verwende .text
+                            _passwordController.text, // Verwende .text
+                            _confirmPasswordController.text, // Verwende .text
+                          );
+
+                          if (user != null) {
+                            // Erfolgreiche Anmeldung
+                            Navigator.pushReplacement(
+                            context,
+                              MaterialPageRoute(builder: (context) => MainScreen()),
+                            );
+                          } else {
+                            // Fehlerbehandlung erfolgt im AuthService über Snackbars
+                          }
                         }
                       },
                       child: Text('Sign Up', style: GoogleFonts.poppins()),

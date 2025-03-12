@@ -1,33 +1,22 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:enefty_icons/enefty_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:enefty_icons/enefty_icons.dart';
-import 'package:water_drop_nav_bar/water_drop_nav_bar.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 // Screens
 import 'package:gym_companion/screens/home_screen.dart';
+import 'package:gym_companion/screens/login_screen.dart';
 import 'package:gym_companion/screens/workout_screen.dart';
 import 'package:gym_companion/screens/nutrition_screen.dart';
 import 'package:gym_companion/screens/progress_screen.dart';
 import 'package:gym_companion/screens/profile_screen.dart';
-import 'package:gym_companion/screens/login_screen.dart';
 
 // Theme
 import 'package:gym_companion/utils/theme.dart';
+import 'package:water_drop_nav_bar/water_drop_nav_bar.dart';
 
-// Auth Provider
-class AuthProvider with ChangeNotifier {
-  User? _user;
-  User? get user => _user;
-
-  void setUser(User? user) {
-    _user = user;
-    notifyListeners();
-  }
-}
-
-// Navigation Provider
+// Provider für Navigation
 class NavigationProvider with ChangeNotifier {
   String _currentScreen = 'home';
 
@@ -71,19 +60,18 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => NavigationProvider()),
-        ChangeNotifierProvider(create: (_) => AuthProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: AppTheme.lightTheme,
         darkTheme: AppTheme.darkTheme,
-        home: AuthWrapper(), // Entscheidet zwischen Login und App
+        home: AuthWrapper(),
       ),
     );
   }
 }
 
-// Entscheidet, ob Login oder Haupt-App angezeigt wird
+// AuthWrapper entscheidet, ob der Nutzer eingeloggt ist oder nicht
 class AuthWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -91,11 +79,12 @@ class AuthWrapper extends StatelessWidget {
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+          return Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
         }
         if (snapshot.hasData && snapshot.data != null) {
-          Provider.of<AuthProvider>(context, listen: false).setUser(snapshot.data);
-          return MainApp();
+          return MainScreen();
         } else {
           return LoginScreen();
         }
@@ -104,8 +93,8 @@ class AuthWrapper extends StatelessWidget {
   }
 }
 
-// Haupt-App mit Bottom Navigation
-class MainApp extends StatelessWidget {
+// Hauptbildschirm mit Bottom Navigation
+class MainScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

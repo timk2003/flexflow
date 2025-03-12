@@ -1,6 +1,9 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:gym_companion/main.dart';
+import 'package:gym_companion/providers/auth_provider.dart';
 import 'package:gym_companion/screens/password_screen.dart';
 import 'package:gym_companion/screens/register_screen.dart';
 
@@ -14,6 +17,8 @@ class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _passwordVisible = false;
+
+  final AuthService _authService = AuthService();
 
   @override
   Widget build(BuildContext context) {
@@ -88,9 +93,24 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     SizedBox(height: 24),
                     ElevatedButton(
-                      onPressed: () {
+                      onPressed: () async {
                         if (_formKey.currentState!.validate()) {
-                          // Hier kannst du die Logik für die Anmeldung hinzufügen
+                          // Anmelde-Logik mit AuthService
+                          User? user = await _authService.signInWithEmail(
+                            context,
+                            _emailController.text,
+                            _passwordController.text,
+                          );
+
+                          if (user != null) {
+                            // Erfolgreiche Anmeldung
+                            Navigator.pushReplacement(
+                              context,
+                                MaterialPageRoute(builder: (context) => MainScreen()),
+                              );
+                          } else {
+                            // Fehlerbehandlung erfolgt im AuthService über Snackbars
+                          }
                         }
                       },
                       child: Text('Sign In', style: GoogleFonts.poppins()),
