@@ -1,10 +1,10 @@
-import 'package:flashy_tab_bar2/flashy_tab_bar2.dart';
+import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_floating_bottom_bar/flutter_floating_bottom_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:enefty_icons/enefty_icons.dart';
-import 'package:water_drop_nav_bar/water_drop_nav_bar.dart';
 
 // Screens
 import 'package:gym_companion/screens/home_screen.dart';
@@ -112,52 +112,31 @@ class MainScreen extends StatelessWidget {
 
 // Bottom Navigation Bar
 class BottomNavBar extends StatelessWidget {
+  final List<IconData> iconList = [
+    EneftyIcons.home_2_outline,
+    EneftyIcons.activity_outline,
+    EneftyIcons.archive_book_outline,
+    EneftyIcons.chart_2_outline,
+    EneftyIcons.profile_outline,
+  ];
+
   @override
   Widget build(BuildContext context) {
     final navigationProvider = Provider.of<NavigationProvider>(context);
-    final screens = ['home', 'workout', 'nutrition', 'progress'];
+    final screens = ['home', 'workout', 'nutrition', 'progress', 'profile'];
 
-    return FlashyTabBar(
-      selectedIndex: screens.indexOf(navigationProvider.currentScreen),
-      backgroundColor: Colors.black,
-      iconSize: 24,
-      animationCurve: Curves.easeInOut,
-      items: [
-        FlashyTabBarItem(
-          icon: Icon(EneftyIcons.home_2_bold),
-          title: Text('Home', style: TextStyle(color: Colors.redAccent)),
-        ),
-        FlashyTabBarItem(
-          icon: Icon(EneftyIcons.activity_bold),
-          title: Text('Workout'),
-        ),
-        FlashyTabBarItem(
-          icon: Icon(EneftyIcons.archive_book_bold),
-          title: Text('Nutrition'),
-        ),
-        FlashyTabBarItem(
-          icon: Icon(EneftyIcons.chart_2_bold),
-          title: Text('Progress'),
-        ),
-      ], onItemSelected: (index) {
+    return AnimatedBottomNavigationBar(
+      icons: iconList,
+      backgroundColor: Colors.black, // Schwarzer Hintergrund
+      activeIndex: screens.indexOf(navigationProvider.currentScreen),
+      inactiveColor: Colors.white,
+      activeColor: Colors.redAccent,
+      notchSmoothness: NotchSmoothness.verySmoothEdge, // Smooth Animation
+      gapLocation: GapLocation.none, // Kein Floating Button
+      onTap: (index) {
         navigationProvider.changeScreen(screens[index]);
       },
+      iconSize: 24, // Größere Icons für besseren Look
     );
-
-    // return WaterDropNavBar(
-    //   onItemSelected: (index) {
-    //     navigationProvider.changeScreen(screens[index]);
-    //   },
-    //   selectedIndex: screens.indexOf(navigationProvider.currentScreen), // Hier wird der aktuelle Index gesetzt
-    //   waterDropColor: Colors.black,
-    //   backgroundColor: Colors.redAccent,
-    //   barItems: [
-    //     BarItem(filledIcon: EneftyIcons.home_2_bold, outlinedIcon: EneftyIcons.home_2_outline),
-    //     BarItem(filledIcon: EneftyIcons.activity_bold, outlinedIcon: EneftyIcons.activity_outline),
-    //     BarItem(filledIcon: EneftyIcons.archive_book_bold, outlinedIcon: EneftyIcons.archive_book_outline),
-    //     BarItem(filledIcon: EneftyIcons.chart_2_bold, outlinedIcon: EneftyIcons.chart_2_outline),
-    //   ],
-    // );
   }
 }
-
