@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "894485243688",
+    "project_id": "gymcompanion-1066c",
+    "storage_bucket": "gymcompanion-1066c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:894485243688:android:e7b0b186e4e848a9e3121d",
+        "android_client_info": {
+          "package_name": "de.timkrisch.gymcomp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyColhqNznx3EkfCs5Z67aydWRUQNOD2fH8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
